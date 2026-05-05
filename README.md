@@ -22,7 +22,7 @@ La página principal corresponde a un panel llamado NaturGas Solutions, el cual 
 
 <img width="1328" height="640" alt="2026-05-04_22-29-24" src="https://github.com/user-attachments/assets/c987c8c0-95d3-4887-9c68-fc46b985f924" />
 
-Se observan las sigueintes secciones en el menú principal:
+Se observan las siguientes secciones en el menú principal:
 
 Inicio
 Empleados
@@ -30,6 +30,10 @@ Normativa
 Intranet
 Proveedores
 
+Restricciones de accesso
 
+Al intentar acceder a algunas secciones, como Empleados e Intranet, se observó que estas se encuentran restringidas, lo que indica la presencia de algun mecanismo de autenticación o control de acceso.
 
+<img width="1328" height="635" alt="imagen" src="https://github.com/user-attachments/assets/b051a39b-37ef-4b0b-be15-373ba3ff8d18" />
 
+Dado esto, el siguiente paso lógico es realizar enumeración de directorios y archivos ocultos, así como analizar posibles parámetros en la aplicación.
