@@ -54,4 +54,16 @@ Durante la enumeración se identificaron las siguientes rutas relevantes:
 /intranet
 /bills
 
-Estas rutas suguieren 
+La ruta /bills resulta interesante, ya que podria estar relacionada con facturación o gestión interna, lo cual suele implicar datos sensibles.
+
+# Acceso a la ruta /bills
+
+Tras identificar la ruta /bills durante la enumeración de directorios, se procedió a acceder directamente al endpoint:
+
+```http://172.17.0.2/bills/```
+
+# Interfaz encontrada
+
+Al ingresar a esta ruta, se presentó un panel de autenticación correspondiente al sistema de facturación de NaturGas Solutions.
+
+<img width="1322" height="634" alt="imagen" src="https://github.com/user-attachments/assets/096b4514-006d-4ccd-8184-d60fabee48c0" />
