@@ -30,10 +30,28 @@ Normativa
 Intranet
 Proveedores
 
-Restricciones de accesso
+# Restricciones de accesso
 
 Al intentar acceder a algunas secciones, como Empleados e Intranet, se observó que estas se encuentran restringidas, lo que indica la presencia de algun mecanismo de autenticación o control de acceso.
 
 <img width="1328" height="635" alt="imagen" src="https://github.com/user-attachments/assets/b051a39b-37ef-4b0b-be15-373ba3ff8d18" />
 
 Dado esto, el siguiente paso lógico es realizar enumeración de directorios y archivos ocultos, así como analizar posibles parámetros en la aplicación.
+
+# Enumeración de Directorios
+
+Con el objetivo de descubrir rutas dentro de la aplicación web, se utilizó la herramienta Gobuster para realizar fuzzing de directorios.
+
+```gobuster dir -u http://172.17.0.2/ -w /usr/share/wordlists/seclists/Discovery/Web-Content/DirBuster-2007_directory-list-2.3-medium.txt -x html,txt,zip,php,bak,py,png,tar,db,sh,jpg,jpeg```
+
+# Resultados
+
+<img width="1304" height="380" alt="imagen" src="https://github.com/user-attachments/assets/fbbcac00-d853-4401-818d-8ba222186f0c" />
+
+Durante la enumeración se identificaron las siguientes rutas relevantes:
+
+/index.php
+/intranet
+/bills
+
+Estas rutas suguieren 
