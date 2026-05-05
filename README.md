@@ -8,6 +8,28 @@ nmap -p- -sS -sV -Pn --min-rate 5000 172.17.0.2
 El escaneo reveló que el host objetivo se encuentra activo y expone los siguientes servicios:
 
 Puerto 22 (SSH)
+Puerto 80 (HTTP)
 
-Servicio: OpenSSH 8.9p1
-Sistema: Ubuntu Linux
+Enumeracion Web
+
+Tras identificar el servicio HTTP en el puerto 80, se accedió a la aplicación web desde el navegador:
+
+http://172.17.0.2
+
+Interfaz Inicial
+
+La página principal corresponde a un panel llamado NaturGas Solutions, el cual muestra información general de la empresa, como estadísticas y navegación interna.
+
+<img width="1328" height="640" alt="2026-05-04_22-29-24" src="https://github.com/user-attachments/assets/c987c8c0-95d3-4887-9c68-fc46b985f924" />
+
+Se observan las sigueintes secciones en el menú principal:
+
+Inicio
+Empleados
+Normativa
+Intranet
+Proveedores
+
+
+
+
