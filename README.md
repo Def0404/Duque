@@ -1,69 +1,121 @@
-# Duque
-Resolución de la maquina Duque.
+# 🐳 DockerLabs Writeup - Duque
 
-Para comenzar, se realizo un escaneo de puertos utilizando Nmap con detección de servicios y versiones, ademas de scripts por defecto:
-```nmap -p- -sS -sV -Pn --min-rate 5000 172.17.0.2```
-<img width="766" height="292" alt="imagen" src="https://github.com/user-attachments/assets/fe037f7e-a837-4674-93b6-23f023c2e710" />
+## 📌 Descripción
+
+Resolución de la máquina **Duque** de DockerLabs.
+
+---
+
+## 🔍 Reconocimiento
+
+Para comenzar, se realizó un escaneo de puertos utilizando **Nmap**, con detección de servicios, versiones y ejecución de scripts por defecto:
+
+```bash
+nmap -p- -sS -sV -Pn --min-rate 5000 172.17.0.2
+```
+
+<img width="766" height="292" alt="nmap" src="https://github.com/user-attachments/assets/fe037f7e-a837-4674-93b6-23f023c2e710" />
+
+### 📊 Resultados
 
 El escaneo reveló que el host objetivo se encuentra activo y expone los siguientes servicios:
 
-Puerto 22 (SSH)
-Puerto 80 (HTTP)
+* **Puerto 22 (SSH)** → OpenSSH (Ubuntu)
+* **Puerto 80 (HTTP)** → Apache (Ubuntu)
 
-# Enumeracion Web
+Dado que el puerto 80 expone una aplicación web, se decidió enfocar el análisis en este servicio.
 
-Tras identificar el servicio HTTP en el puerto 80, se accedió a la aplicación web desde el navegador:
+---
 
+## 🌐 Enumeración Web
+
+Se accedió a la aplicación desde el navegador:
+
+```
 http://172.17.0.2
+```
 
-# Interfaz Inicial
+### 🖥️ Interfaz inicial
 
-La página principal corresponde a un panel llamado NaturGas Solutions, el cual muestra información general de la empresa, como estadísticas y navegación interna.
+La página principal corresponde a un dashboard corporativo llamado **NaturGas Solutions**, el cual muestra estadísticas e información general.
 
-<img width="1328" height="640" alt="2026-05-04_22-29-24" src="https://github.com/user-attachments/assets/c987c8c0-95d3-4887-9c68-fc46b985f924" />
+<img width="1328" height="640" alt="dashboard" src="https://github.com/user-attachments/assets/c987c8c0-95d3-4887-9c68-fc46b985f924" />
 
-Se observan las siguientes secciones en el menú principal:
+Se identificaron las siguientes secciones:
 
-Inicio
-Empleados
-Normativa
-Intranet
-Proveedores
+* Inicio
+* Empleados
+* Normativa
+* Intranet
+* Proveedores
 
-# Restricciones de accesso
+---
 
-Al intentar acceder a algunas secciones, como Empleados e Intranet, se observó que estas se encuentran restringidas, lo que indica la presencia de algun mecanismo de autenticación o control de acceso.
+## 🔐 Restricciones de acceso
 
-<img width="1328" height="635" alt="imagen" src="https://github.com/user-attachments/assets/b051a39b-37ef-4b0b-be15-373ba3ff8d18" />
+Al intentar acceder a secciones como **Empleados** e **Intranet**, se observó que están restringidas.
 
-Dado esto, el siguiente paso lógico es realizar enumeración de directorios y archivos ocultos, así como analizar posibles parámetros en la aplicación.
+<img width="1328" height="635" alt="restriccion" src="https://github.com/user-attachments/assets/b051a39b-37ef-4b0b-be15-373ba3ff8d18" />
 
-# Enumeración de Directorios
+Esto indica la presencia de mecanismos de autenticación o control de acceso, lo que sugiere que existen áreas internas protegidas.
 
-Con el objetivo de descubrir rutas dentro de la aplicación web, se utilizó la herramienta Gobuster para realizar fuzzing de directorios.
+---
 
-```gobuster dir -u http://172.17.0.2/ -w /usr/share/wordlists/seclists/Discovery/Web-Content/DirBuster-2007_directory-list-2.3-medium.txt -x html,txt,zip,php,bak,py,png,tar,db,sh,jpg,jpeg```
+## 📂 Enumeración de Directorios
 
-# Resultados
+Con el objetivo de descubrir rutas ocultas, se utilizó **Gobuster**:
 
-<img width="1304" height="380" alt="imagen" src="https://github.com/user-attachments/assets/fbbcac00-d853-4401-818d-8ba222186f0c" />
+```bash
+gobuster dir -u http://172.17.0.2/ \
+-w /usr/share/wordlists/seclists/Discovery/Web-Content/DirBuster-2007_directory-list-2.3-medium.txt \
+-x html,txt,zip,php,bak,py,png,tar,db,sh,jpg,jpeg
+```
 
-Durante la enumeración se identificaron las siguientes rutas relevantes:
+<img width="1304" height="380" alt="gobuster" src="https://github.com/user-attachments/assets/fbbcac00-d853-4401-818d-8ba222186f0c" />
 
-/index.php
-/intranet
-/bills
+### 📊 Resultados
 
-La ruta /bills resulta interesante, ya que podria estar relacionada con facturación o gestión interna, lo cual suele implicar datos sensibles.
+Se identificaron las siguientes rutas relevantes:
 
-# Acceso a la ruta /bills
+* `/index.php`
+* `/intranet`
+* `/bills`
 
-Tras identificar la ruta /bills durante la enumeración de directorios, se procedió a acceder directamente al endpoint:
+La ruta `/bills` resulta especialmente interesante, ya que podría estar relacionada con facturación o gestión interna, lo cual suele implicar información sensible.
 
-```http://172.17.0.2/bills/```
+---
 
-# Interfaz encontrada
+## 💰 Acceso a `/bills`
 
-Al ingresar a esta ruta, se presentó un panel de autenticación correspondiente al sistema de facturación de NaturGas Solutions.
+Se accedió directamente al endpoint:
 
-<img width="1322" height="634" alt="imagen" src="https://github.com/user-attachments/assets/096b4514-006d-4ccd-8184-d60fabee48c0" />
+```
+http://172.17.0.2/bills/
+```
+
+### 🖥️ Interfaz encontrada
+
+Se presentó un panel de autenticación correspondiente al sistema de facturación de **NaturGas Solutions**.
+
+<img width="1322" height="634" alt="login" src="https://github.com/user-attachments/assets/096b4514-006d-4ccd-8184-d60fabee48c0" />
+
+El formulario solicita:
+
+* Usuario
+* Contraseña
+
+---
+
+## 🧠 Análisis
+
+* 🔐 La ruta `/bills` está protegida mediante autenticación.
+* 💰 Al tratarse de un sistema de facturación, es probable que maneje información sensible.
+* ⚠️ Este tipo de paneles puede ser vulnerable a:
+
+  * Fuerza bruta
+  * Inyección SQL
+  * Fallos de autorización
+
+Por lo tanto, el siguiente paso será buscar formas de interactuar con este sistema sin autenticación o identificar posibles vulnerabilidades en sus endpoints.
+
+---
