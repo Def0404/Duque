@@ -19,7 +19,6 @@ nmap -p- -sS -sV -Pn --min-rate 5000 172.17.0.2
 ### 📊 Resultados
 
 El escaneo reveló que el host objetivo se encuentra activo y expone los siguientes servicios:
-
 * **Puerto 22 (SSH)** → OpenSSH (Ubuntu)
 * **Puerto 80 (HTTP)** → Apache (Ubuntu)
 
@@ -56,6 +55,7 @@ Se identificaron las siguientes secciones:
 Al intentar acceder a secciones como **Empleados** e **Intranet**, se observó que están restringidas.
 
 <img width="1328" height="635" alt="restriccion" src="https://github.com/user-attachments/assets/b051a39b-37ef-4b0b-be15-373ba3ff8d18" />
+
 
 Esto indica la presencia de mecanismos de autenticación o control de acceso, lo que sugiere que existen áreas internas protegidas.
 
@@ -129,20 +129,38 @@ Se logró acceder exitosamente utilizando las siguientes credenciales:
 Usuario: admin
 Contraseña: admin123
 ```
-<img width="1323" height="634" alt="imagen" src="https://github.com/user-attachments/assets/744b75b9-700d-4ff8-8f8b-f35c30059fd0" />
+
 
 ### 🧠 Análisis
 
-* ⚠️ El uso de credenciales por defecto representa una **grave vulnerabilidad de seguridad**.
-* 🔓 Esto permitió el acceso directo al sistema de facturación sin necesidad de realizar ataques más complejos.
-* 🧪 Este tipo de fallo es común en entornos mal configurados o en aplicaciones en desarrollo.
-
-### 🚨 Impacto
-
-* Acceso no autorizado a información sensible
-* Posible manipulación de datos internos
-* Escalada hacia otras vulnerabilidades dentro del sistema
+* ⚠️ El uso de credenciales por defecto representa una mala práctica de seguridad.
+* 🔓 Esto permitió el acceso directo al sistema de facturación sin necesidad de técnicas más complejas.
 
 ---
 
-Una vez autenticado, se obtuvo acceso al panel interno, lo que permitió continuar con la enumeración y análisis de nuevas funcionalidades.
+## 📄 Panel interno y análisis de parámetros
+
+Una vez autenticado, se obtuvo acceso al panel interno del sistema de facturación.
+
+<img width="1323" height="634" alt="imagen" src="https://github.com/user-attachments/assets/744b75b9-700d-4ff8-8f8b-f35c30059fd0" />
+
+Dentro de la aplicación se encontraron dos documentos disponibles:
+
+* 📄 **Factura Consumo (Enero)**
+* 📄 **Factura Instalación (Febrero)**
+
+Al interactuar con estos elementos, se observó que la aplicación utiliza un parámetro en la URL para gestionar el contenido mostrado:
+
+```id="a9xw2k"
+http://172.17.0.2/bills/panel.php?id=xya456
+```
+
+### 🧠 Análisis
+
+* 🔎 El uso del parámetro `id` sugiere que la aplicación carga información de forma dinámica.
+* ⚠️ Este tipo de implementación puede ser vulnerable si no existe una validación adecuada.
+* 🧪 Esto abre la posibilidad de realizar pruebas de enumeración o manipulación del parámetro para acceder a otros recursos.
+
+---
+
+A partir de este punto, se procedió a analizar y fuzzear el parámetro `id` en busca de posibles vulnerabilidades.
