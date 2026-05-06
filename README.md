@@ -143,25 +143,55 @@ Acceso exitoso → usuario `duque`.
 
 Se listaron binarios SUID:
 
-```bash
+```bash id="7yq3nt"
 find / -perm -4000 2>/dev/null
 ```
 
 <img width="426" height="238" alt="imagen" src="https://github.com/user-attachments/assets/ea82ee76-af62-44ac-8f35-8b65cd20517b" />
 
-Se identificó `/usr/bin/env` como vector explotable.
+Se identificó `/usr/bin/env` como vector potencial de explotación.
 
-### Explotación
+---
 
-```bash
+### ⚔️ Explotación
+
+El binario `env` permite ejecutar programas en un entorno modificado.
+Cuando tiene el bit **SUID**, puede ejecutarse con privilegios elevados.
+
+Investigando en **GTFOBins**, se encontró que es posible abusar de este binario para invocar una shell manteniendo privilegios:
+
+```bash id="2f2y1g"
 env /bin/sh -p
 ```
+
+### 🔍 ¿Qué hace este comando?
+
+* `env` → ejecuta un programa dentro de su entorno
+* `/bin/sh` → lanza una shell
+* `-p` → **preserva los privilegios efectivos (EUID)**
+
+👉 Esto es clave, ya que evita que la shell reduzca privilegios al usuario actual.
+
+---
+
+### ✅ Resultado
 
 <img width="1321" height="594" alt="imagen" src="https://github.com/user-attachments/assets/eccfeefe-b0ce-4418-a824-847ea7d73399" />
 
 <img width="315" height="126" alt="imagen" src="https://github.com/user-attachments/assets/2415be45-8bb1-4284-a685-ff8655c20c8c" />
 
-Se obtuvo shell como **root**.
+Al ejecutar el comando, se obtuvo una shell con privilegios de **root**, confirmando la escalada exitosa.
+
+---
+
+### 🧠 Análisis
+
+* ⚠️ El binario `/usr/bin/env` con SUID representa un riesgo crítico si no está correctamente restringido.
+* 🔓 Permite ejecutar comandos arbitrarios con privilegios elevados.
+* 🧪 Este tipo de vectores es común en entornos mal configurados.
+
+---
+
 
 ---
 
