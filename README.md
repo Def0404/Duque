@@ -119,3 +119,30 @@ El formulario solicita:
 Por lo tanto, el siguiente paso será buscar formas de interactuar con este sistema sin autenticación o identificar posibles vulnerabilidades en sus endpoints.
 
 ---
+## 🔓 Acceso mediante credenciales por defecto
+
+Tras analizar el panel de autenticación en la ruta `/bills`, se procedió a probar credenciales comunes o por defecto.
+
+Se logró acceder exitosamente utilizando las siguientes credenciales:
+
+```id="k2d9sl"
+Usuario: admin
+Contraseña: admin123
+```
+<img width="1323" height="634" alt="imagen" src="https://github.com/user-attachments/assets/744b75b9-700d-4ff8-8f8b-f35c30059fd0" />
+
+### 🧠 Análisis
+
+* ⚠️ El uso de credenciales por defecto representa una **grave vulnerabilidad de seguridad**.
+* 🔓 Esto permitió el acceso directo al sistema de facturación sin necesidad de realizar ataques más complejos.
+* 🧪 Este tipo de fallo es común en entornos mal configurados o en aplicaciones en desarrollo.
+
+### 🚨 Impacto
+
+* Acceso no autorizado a información sensible
+* Posible manipulación de datos internos
+* Escalada hacia otras vulnerabilidades dentro del sistema
+
+---
+
+Una vez autenticado, se obtuvo acceso al panel interno, lo que permitió continuar con la enumeración y análisis de nuevas funcionalidades.
