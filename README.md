@@ -129,7 +129,7 @@ Se logró acceder exitosamente utilizando las siguientes credenciales:
 Usuario: admin
 Contraseña: admin123
 ```
-
+<img width="1324" height="636" alt="imagen" src="https://github.com/user-attachments/assets/3f28bcc3-2f5b-465f-8950-97694050b2e0" />
 
 ### 🧠 Análisis
 
