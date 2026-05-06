@@ -269,3 +269,43 @@ Password: duquelaje81029557!
 ---
 
 Este hallazgo confirma la existencia de una vulnerabilidad de tipo **IDOR (Insecure Direct Object Reference)**, ya que fue posible acceder a información sensible manipulando directamente el parámetro `id`.
+
+## 🔐 Acceso por SSH
+
+Tras obtener las credenciales desde el parámetro vulnerable, se procedió a probarlas en el servicio SSH identificado durante la fase de reconocimiento.
+
+```bash id="sshcmd"
+ssh duque@172.17.0.2
+```
+
+Se utilizó la siguiente contraseña:
+
+```id="sshpass"
+duquelaje81029557!
+```
+
+### ✅ Resultado
+
+<img width="1318" height="633" alt="imagen" src="https://github.com/user-attachments/assets/20663769-6ad3-4b24-96d5-3f08e3082ffb" />
+
+El acceso fue exitoso, logrando autenticarse como el usuario:
+
+```id="user"
+duque
+```
+
+### 🧠 Análisis
+
+* 🔓 Las credenciales obtenidas desde la aplicación web eran válidas también para el servicio SSH.
+* ⚠️ Esto evidencia una reutilización de credenciales entre servicios, lo cual representa una mala práctica de seguridad.
+* 🔗 Se completa así la cadena de ataque:
+
+  * Enumeración web
+  * Acceso con credenciales por defecto
+  * Identificación de parámetro vulnerable
+  * Exposición de credenciales
+  * Acceso al sistema vía SSH
+
+---
+
+Con esto, se logra comprometer completamente el sistema objetivo.
