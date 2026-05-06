@@ -217,6 +217,7 @@ Durante el fuzzing se identificaron múltiples valores válidos del parámetro `
 
 <img width="1320" height="631" alt="imagen" src="https://github.com/user-attachments/assets/86627511-8cb6-4eaa-9ad7-1718de731e97" />
 
+
 ```id="idsvalidos"
 xya123
 xya456
@@ -257,6 +258,8 @@ xyc724
 Este valor devolvía una respuesta con un tamaño distinto (**5994 bytes**), lo que indicaba contenido diferente.
 
 Al acceder a dicho recurso, se encontraron credenciales en texto plano:
+
+<img width="1322" height="637" alt="imagen" src="https://github.com/user-attachments/assets/b8958e1c-a795-439b-ba0a-dafb09605aa5" />
 
 ```id="credenciales"
 Usuario: duque
